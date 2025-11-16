@@ -2,6 +2,8 @@
 
 **Early Warning System for Training Instabilities**
 
+[![PyPI](https://img.shields.io/badge/pip-install%20candorflow-blue)]()
+[![Colab](https://img.shields.io/badge/Open%20in-Colab-yellow?logo=googlecolab)](https://colab.research.google.com/github/CandorSystem/CandorFlow/blob/main/examples/run_demo.ipynb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
