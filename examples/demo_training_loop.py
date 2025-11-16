@@ -26,12 +26,8 @@ import numpy as np
 # Add parent directory to path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from candorflow import (
-    compute_lambda_metric,
-    StabilityController,
-    set_seed,
-    get_logger
-)
+from candorflow import compute_lambda, StabilityController
+from candorflow.utils import set_seed, get_logger
 
 
 # ============================================
@@ -102,7 +98,7 @@ def main():
         loss = outputs.mean()
         
         # Compute lambda metric
-        lambda_value = compute_lambda_metric(
+        lambda_value = compute_lambda(
             model=model,
             loss=loss,
             history_window=10,
