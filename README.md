@@ -101,12 +101,8 @@ pip install git+https://github.com/CandorSystem/CandorFlow.git
 After installation, you can import CandorFlow from anywhere:
 
 ```python
-from candorflow import (
-    compute_lambda_metric,
-    StabilityController,
-    set_seed,
-    get_logger
-)
+from candorflow import compute_lambda, StabilityController
+from candorflow.demo import run_demo, plot_results
 ```
 
 ### Option 2: Development Installation
@@ -123,13 +119,13 @@ This installs the package in editable mode, so changes to the source code are im
 
 ### Option 3: Manual Setup (Not Recommended)
 
-If you prefer not to install the package and want to run examples directly:
+If you prefer not to install the package:
 
 ```bash
 git clone https://github.com/CandorSystem/CandorFlow.git
 cd CandorFlow
 pip install -r requirements.txt
-python examples/demo_training_loop.py  # Must run from repo directory
+python examples/run_demo.py  # Must run from repo directory
 ```
 
 **Note:** With this approach, you'll need to add the repository to your Python path or run scripts from the repository root directory.
@@ -140,60 +136,54 @@ python examples/demo_training_loop.py  # Must run from repo directory
 
 ### Quick Start: Run the Training Demo
 
+After installation, run the demo:
+
+```python
+from candorflow.demo import run_demo, plot_results
+
+# Run the demo
+results = run_demo()
+
+# Generate plots
+plot_results(results)
+```
+
+Or use the command-line wrapper:
+
 ```bash
-python examples/demo_training_loop.py
+python examples/run_demo.py
 ```
 
 This will:
-1. Create a small neural network
-2. Train it on dummy data
+1. Create a small MLP neural network
+2. Train it on synthetic data
 3. Compute λ(t) at each step
-4. Intentionally inject instability after step 30
+4. Inject synthetic instability spike at step 30
 5. Demonstrate automatic detection and rollback
-6. Save results to `plots/training_results.pt`
+6. Generate two plots:
+   - `plots/lambda_curve.png` - λ(t) over time with intervention markers
+   - `plots/stability_phases.png` - Color-coded stability zones
 
 **Expected output:**
 ```
-================================================================
-CandorFlow Training Stability Demo
-================================================================
-NOTE: This is a simplified demonstration.
-The full proprietary system includes many additional features.
-================================================================
-
-📦 Creating model...
-🔧 Initializing stability controller...
-🚀 Starting training for 50 steps...
-
-Step   0 | Loss: 0.6931 | λ(t): 0.0000 | Action: none
-Step   5 | Loss: 0.6895 | λ(t): 0.0234 | Action: none
-...
-⚠️  INSTABILITY DETECTED at step 35: λ(t)=3.4521 (threshold=2.0)
-✓ Rolled back to stable checkpoint from step 25
-✓ Reduced learning rate: 0.001000 → 0.000500
+✓ Saved plots to plots/
+  - lambda_curve.png
+  - stability_phases.png
 ```
 
-### Visualize Results
+### Colab Integration
 
-```bash
-python examples/demo_plots.py
+The demo is designed for easy Colab integration:
+
+```python
+!pip install candorflow
+
+from candorflow.demo import run_demo, plot_results
+results = run_demo(steps=50, spike_step=30, threshold=2.0)
+plot_results(results)
 ```
 
-This generates:
-- `plots/lambda_curve.png` - λ(t) over time with intervention markers
-- `plots/stability_phases.png` - Color-coded stability zones
-
-### Interactive Notebook
-
-```bash
-jupyter notebook notebooks/CandorFlow_Demo.ipynb
-```
-
-The notebook includes:
-- Step-by-step explanations
-- Live training visualization
-- Interactive parameter tuning
-- Educational content about stability monitoring
+All training logic is contained in `candorflow.demo` - no need to write training loops in Colab!
 
 ---
 
@@ -208,15 +198,15 @@ CandorFlow/
 ├── LICENSE                     # MIT License
 │
 ├── candorflow/                 # Main package
-│   ├── __init__.py            # Package initialization
+│   ├── __init__.py            # Public API (compute_lambda, StabilityController)
+│   ├── demo.py                # Complete training demo (all logic here)
 │   ├── lambda_metric.py       # Simplified λ(t) computation
 │   ├── stability_controller.py # Basic monitoring & intervention
 │   ├── utils.py               # Checkpoint and logging utilities
 │   └── version.py             # Version information
 │
 ├── examples/                   # Runnable demos
-│   ├── demo_training_loop.py  # Training with stability monitoring
-│   └── demo_plots.py          # Visualization generation
+│   └── run_demo.py            # Thin wrapper to run demo
 │
 ├── notebooks/                  # Jupyter notebooks
 │   └── CandorFlow_Demo.ipynb  # Interactive tutorial
@@ -232,10 +222,10 @@ CandorFlow/
 ### 1. Monitor Training with λ(t)
 
 ```python
-from candorflow import compute_lambda_metric, StabilityController
+from candorflow import compute_lambda, StabilityController
 
 # During training loop
-lambda_value = compute_lambda_metric(
+lambda_value = compute_lambda(
     model=model,
     loss=loss,
     gradient_history=gradient_history

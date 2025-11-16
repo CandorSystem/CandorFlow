@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "candorflow"
-version = "0.1.0"
+version = "0.1.1"
 description = "CandorFlow Lite – Safe, simplified public demo of CandorFlow training stability controller"
 authors = [
     {name = "Candor System", email = "contact@candorsystem.com"}
@@ -24,4 +24,3 @@ package-dir = {"" = "."}
 
 [tool.setuptools.packages.find]
 include = ["candorflow*"]
-

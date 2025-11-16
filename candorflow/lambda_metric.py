@@ -59,7 +59,7 @@ def compute_lambda_metric(
     # Compute gradients
     model.zero_grad()
     if loss.requires_grad:
-        loss.backward(retain_graph=True)
+        loss.backward()
     
     # Calculate gradient norm
     grad_norm = 0.0
@@ -97,28 +97,3 @@ def compute_lambda_metric(
         lambda_value = 0.0
     
     return lambda_value
-
-
-def compute_lambda_metric_simple(gradient_norms: List[float]) -> float:
-    """
-    Compute λ(t) from a list of gradient norms.
-    
-    This is a simplified version for when you already have gradient history.
-    
-    Args:
-        gradient_norms: List of recent gradient norm values
-    
-    Returns:
-        lambda_value: Stability metric (coefficient of variation squared)
-    """
-    if len(gradient_norms) < 3:
-        return 0.0
-    
-    grad_variance = np.var(gradient_norms)
-    grad_mean = np.mean(gradient_norms)
-    
-    if grad_mean > 1e-8:
-        return grad_variance / (grad_mean ** 2)
-    else:
-        return 0.0
-
