@@ -138,7 +138,7 @@ def main():
         return
     
     print(f"📊 Loading results from {results_path}...")
-    results = torch.load(results_path)
+    results = torch.load(results_path, weights_only=False)
     
     lambda_values = results["lambda_values"]
     actions = results["actions"]
