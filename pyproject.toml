@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "candorflow"
+version = "0.1.0"
+description = "CandorFlow Lite – Safe, simplified public demo of CandorFlow training stability controller"
+authors = [
+    {name = "Candor System", email = "contact@candorsystem.com"}
+]
+requires-python = ">=3.8"
+readme = "README.md"
+license = {file = "LICENSE"}
+dependencies = [
+    "torch",
+    "matplotlib",
+]
+
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+include = ["candorflow*"]
+
