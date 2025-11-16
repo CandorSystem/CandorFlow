@@ -90,17 +90,49 @@ The full CandorFlow system includes many advanced features that are **NOT** in t
 - Python 3.8 or higher
 - pip package manager
 
-### Install Dependencies
+### Option 1: Install from GitHub (Recommended)
+
+Install CandorFlow directly from the repository:
 
 ```bash
+pip install git+https://github.com/CandorSystem/CandorFlow.git
+```
+
+After installation, you can import CandorFlow from anywhere:
+
+```python
+from candorflow import (
+    compute_lambda_metric,
+    StabilityController,
+    set_seed,
+    get_logger
+)
+```
+
+### Option 2: Development Installation
+
+For contributing, modifying the code, or running examples from the repository:
+
+```bash
+git clone https://github.com/CandorSystem/CandorFlow.git
+cd CandorFlow
+pip install -e .
+```
+
+This installs the package in editable mode, so changes to the source code are immediately reflected.
+
+### Option 3: Manual Setup (Not Recommended)
+
+If you prefer not to install the package and want to run examples directly:
+
+```bash
+git clone https://github.com/CandorSystem/CandorFlow.git
+cd CandorFlow
 pip install -r requirements.txt
+python examples/demo_training_loop.py  # Must run from repo directory
 ```
 
-Or install manually:
-
-```bash
-pip install torch transformers numpy matplotlib jupyter notebook
-```
+**Note:** With this approach, you'll need to add the repository to your Python path or run scripts from the repository root directory.
 
 ---
 
@@ -171,6 +203,7 @@ The notebook includes:
 CandorFlow/
 │
 ├── README.md                   # This file
+├── pyproject.toml              # Package configuration (pip install)
 ├── requirements.txt            # Python dependencies
 ├── LICENSE                     # MIT License
 │
