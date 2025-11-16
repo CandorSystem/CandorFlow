@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-name = "candorflow"
+name = "candorflow_test_upload"
 version = "0.1.1"
 description = "Training stability tools for synthetic demo"
 authors = [{ name = "Matt Gehring", email = "matt@candorprotocol.com" }]
