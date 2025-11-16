@@ -10,7 +10,7 @@ The full proprietary CandorFlow system includes many advanced features not
 shown here.
 
 This demo:
-- Trains a small transformer model on dummy data
+- Trains a simple MLP model on synthetic data
 - Computes the λ(t) stability metric at each step
 - Intentionally causes training instability
 - Demonstrates early warning detection
@@ -21,7 +21,6 @@ import sys
 import os
 import torch
 import torch.nn as nn
-from transformers import AutoModel, AutoConfig
 import numpy as np
 
 # Add parent directory to path
@@ -35,51 +34,23 @@ from candorflow import (
 )
 
 
-class SimpleClassifier(nn.Module):
-    """A simple classifier built on a small transformer."""
-    
-    def __init__(self, hidden_size=256, num_classes=2):
+# ============================================
+# TinyModel — Safe, simple, Colab-friendly MLP
+# ============================================
+class TinyModel(nn.Module):
+    def __init__(self, input_dim=32, hidden_dim=64, output_dim=10):
         super().__init__()
-        # Use a tiny configuration for demo purposes
-        config = AutoConfig.from_pretrained("distilbert-base-uncased")
-        config.hidden_size = hidden_size
-        config.num_hidden_layers = 2
-        config.num_attention_heads = 4
-        
-        try:
-            self.encoder = AutoModel.from_config(config)
-        except:
-            # Fallback to simple MLP if transformer fails
-            self.encoder = nn.Sequential(
-                nn.Linear(768, hidden_size),
-                nn.ReLU(),
-                nn.Linear(hidden_size, hidden_size),
-                nn.ReLU()
-            )
-        
-        self.classifier = nn.Linear(hidden_size, num_classes)
-    
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.act = nn.ReLU()
+        self.fc2 = nn.Linear(hidden_dim, output_dim)
+
     def forward(self, x):
-        # x shape: (batch_size, seq_len, input_dim)
-        if hasattr(self.encoder, 'config'):
-            # Transformer encoder
-            outputs = self.encoder(inputs_embeds=x)
-            if hasattr(outputs, 'last_hidden_state'):
-                pooled = outputs.last_hidden_state.mean(dim=1)
-            else:
-                pooled = outputs[0].mean(dim=1)
-        else:
-            # Simple MLP
-            pooled = self.encoder(x.mean(dim=1))
-        
-        return self.classifier(pooled)
+        return self.fc2(self.act(self.fc1(x)))
 
 
-def generate_dummy_data(num_samples=32, seq_len=16, input_dim=768, num_classes=2):
-    """Generate dummy training data."""
-    X = torch.randn(num_samples, seq_len, input_dim)
-    y = torch.randint(0, num_classes, (num_samples,))
-    return X, y
+# Synthetic toy data batch (avoids tokenization + embedding mismatches)
+def get_batch(batch_size=16, input_dim=32):
+    return torch.randn(batch_size, input_dim)
 
 
 def main():
@@ -99,8 +70,7 @@ def main():
     
     # Create model
     logger.info("\n📦 Creating model...")
-    model = SimpleClassifier(hidden_size=256, num_classes=2).to(device)
-    criterion = nn.CrossEntropyLoss()
+    model = TinyModel().to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
     
     # Create stability controller
@@ -121,14 +91,15 @@ def main():
     logger.info(f"\n🚀 Starting training for {num_steps} steps...\n")
     
     for step in range(num_steps):
-        # Generate batch
-        X, y = generate_dummy_data(num_samples=32)
-        X, y = X.to(device), y.to(device)
+        # Generate synthetic inputs
+        inputs = get_batch().to(device)
         
-        # Forward pass
+        # Forward pass through the tiny model
         model.train()
-        outputs = model(X)
-        loss = criterion(outputs, y)
+        outputs = model(inputs)
+        
+        # Simple differentiable loss (mean output)
+        loss = outputs.mean()
         
         # Compute lambda metric
         lambda_value = compute_lambda_metric(
