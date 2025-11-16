@@ -97,3 +97,7 @@ def compute_lambda_metric(
         lambda_value = 0.0
     
     return lambda_value
+
+
+# Alias for cleaner API
+compute_lambda = compute_lambda_metric

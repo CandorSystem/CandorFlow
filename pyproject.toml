@@ -2,16 +2,20 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "candorflow"
 version = "0.1.2"
-description = "Training stability tools for synthetic demo"
-authors = [{ name = "Matt Gehring", email = "matt@candorprotocol.com" }]
+description = "Training stability tools (public CandorFlow Lite demo)"
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = ["torch", "matplotlib", "numpy"]
-
+authors = [
+  { name = "Matt Gehring", email = "matt@candorprotocol.com" }
+]
+dependencies = [
+  "torch",
+  "matplotlib",
+  "numpy"
+]
 
 [tool.setuptools]
 package-dir = {"" = "."}
