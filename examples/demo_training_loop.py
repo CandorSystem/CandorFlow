@@ -108,6 +108,17 @@ def main():
             history_window=10,
             gradient_history=gradient_history
         )
+        
+        # ============================================================
+        # 🔥 Synthetic instability spike for demonstration purposes
+        # NOTE:
+        # This spike is NOT part of the proprietary CandorFlow engine.
+        # It exists ONLY to make the public demo visually interesting.
+        # ============================================================
+        if step == 30:
+            lambda_value = lambda_value + 3.0   # force spike above threshold
+            logger.info("⚠️ Synthetic instability spike injected at step 30 (demo only)")
+        
         lambda_values.append(lambda_value)
         
         # Update controller
