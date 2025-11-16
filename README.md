@@ -361,5 +361,19 @@ If you find this demo helpful, please consider starring the repository!
 
 ---
 
-**Built with ❤️ for safer, more reliable AI training**
+**Built for responsible, and safe AI.**
+
+---
+
+## Project Support & Affiliations
+
+CandorFlow and the Candor Systems project are supported by several leading industry startup programs:
+
+[![NVIDIA Inception](https://img.shields.io/badge/NVIDIA-Inception%20Member-76B900?logo=nvidia&logoColor=white)]()
+[![Google Cloud Startup](https://img.shields.io/badge/Google%20Cloud-Startup%20Program-4285F4?logo=googlecloud&logoColor=white)]()
+[![AWS Activate](https://img.shields.io/badge/AWS-Activate%20Program-FF9900?logo=amazonaws&logoColor=white)]()
+
+These affiliations provide cloud credits, compute resources, and technical support for ongoing research and development.
+
+> **Note:** These affiliations indicate participation in early-stage startup support programs and do **not** imply endorsement of CandorFlow's algorithms or proprietary systems.
 
