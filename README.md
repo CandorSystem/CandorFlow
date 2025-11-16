@@ -43,3 +43,5 @@ For technical collaboration or research access to CandorFlow Pro
 📩 matt@candorprotocol.com
 
 ---
+
+(Last updated: testing git identity)
