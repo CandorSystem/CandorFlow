@@ -130,6 +130,18 @@ def main():
         )
         actions.append(action)
         
+        # ============================================================
+        # 🔧 Reset autograd graph after rollback (prevents versioning issues)
+        # ============================================================
+        if action["action"] == "rollback":
+            optimizer.zero_grad(set_to_none=True)
+            for p in model.parameters():
+                p.grad = None
+            
+            # Ensure no stale graph is carried forward
+            loss = loss.detach()
+            lambda_value = float(lambda_value)
+        
         # Backward pass and optimization
         optimizer.zero_grad()
         loss.backward()
