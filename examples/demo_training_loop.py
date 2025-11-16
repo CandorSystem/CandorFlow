@@ -141,6 +141,25 @@ def main():
             # Ensure no stale graph is carried forward
             loss = loss.detach()
             lambda_value = float(lambda_value)
+            
+            # ============================================================
+            # 🔧 Reset training graph after rollback
+            # ============================================================
+            
+            # Detach ALL model parameters so they no longer track the old graph
+            for p in model.parameters():
+                p.requires_grad_(True)
+                p.grad = None
+            
+            # Important: create a NEW input batch to rebuild a valid graph
+            fresh_inputs = get_batch().to(device)
+            
+            # Build a NEW forward pass and NEW loss so backward() works again
+            fresh_outputs = model(fresh_inputs)
+            fresh_loss = fresh_outputs.mean()
+            
+            # Replace existing loss with the new graph-attached loss
+            loss = fresh_loss
         
         # Backward pass and optimization
         optimizer.zero_grad()
